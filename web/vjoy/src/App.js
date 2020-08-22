@@ -13,7 +13,7 @@ class Controller {
   }
 
   connect() {
-    this.ws = new WebSocket("ws://192.168.2.10:8765");
+    this.ws = new WebSocket("ws://192.168.2.101:8765");
     this.ws.binaryType = 'arraybuffer';
     this.ws.onopen = () => {
       this.send(new Uint8Array([0xFF]));
@@ -85,14 +85,25 @@ function App() {
         <div className="left-panel">
           <JoyStick xg='x' yg='y' pwidth={250} pheight={250}></JoyStick>
           <Slider axis='sl0' text='spoilers' snap={false} step={1}></Slider>
+          <div>
+            <Button id={22} text="PT Up"></Button>
+            <Button id={23} text="PT Down"></Button>
+          </div>
         </div>
         <div className="mid-panel">
-          <JoyStick xg='rx' yg='ry' pwidth={200} pheight={200} snap={false}></JoyStick>
+          <JoyStick xg='rx' yg='ry' pwidth={200} pheight={200} snap={true}></JoyStick>
           <div>
             <Button id={15} text="Reset Camera"></Button>
             <Button id={16} text="Ext Camera"></Button>
             <Button id={13} text="Menu"></Button>
             <Button id={14} text="Alt"></Button>
+            <Button id={17} text="Map"></Button>
+            <Button id={18} text="Drone"></Button>
+            <div>
+              <label>Instruments</label>
+              <Button id={19} text="Prev"></Button>
+              <Button id={20} text="Next"></Button>
+            </div>
           </div>
         </div>
         <div className="right-panel">
@@ -120,6 +131,7 @@ function App() {
           <div style={{textAlign: 'center'}}>
             <Button id={10} text="Select"></Button>
             <Button id={11} text="Start"></Button>
+            <Button id={21} text="AI Pilot"></Button>
           </div>
 
           <div style={{marginTop: "10px", float: 'right'}}>

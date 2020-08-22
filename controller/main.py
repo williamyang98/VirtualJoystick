@@ -72,7 +72,7 @@ async def socket_listen(websocket, path):
 
 
 def main():
-    server = websockets.serve(socket_listen, "192.168.2.10", 8765)
+    server = websockets.serve(socket_listen, "192.168.2.101", 8765)
     asyncio.get_event_loop().run_until_complete(server)
     asyncio.get_event_loop().run_forever()
 

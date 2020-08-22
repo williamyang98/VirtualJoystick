@@ -1,0 +1,19 @@
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  margin: 10px;
+  vertical-align: bottom;
+}
+
+.left-panel {
+  width: 35%;
+}
+
+.mid-panel {
+  width: 30%;
+}
+
+.right-panel {
+  width: 32%;
+}

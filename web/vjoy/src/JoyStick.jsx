@@ -33,7 +33,7 @@ export function JoyStick({xg, yg, pwidth=150, pheight=150, snap=true}) {
       <ReactNipple
           // supports all nipplejs options
           // see https://github.com/yoannmoinet/nipplejs#options
-          options={{ mode: 'static', position: { top: '50%', left: '50%' } }}
+          options={{ mode: 'static', color: "green", position: { top: '50%', left: '50%' } }}
           // any unknown props will be passed to the container element, e.g. 'title', 'style' etc
           style={{
               outline: `1px dashed green`,

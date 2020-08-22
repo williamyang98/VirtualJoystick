@@ -1,59 +1,9 @@
-import React, { useContext, useState } from 'react';
-import logo from './logo.svg';
+import React, { useContext, useState, useEffect } from 'react';
 import AppContext, { AppProvider } from './AppContext';
 import './App.css';
 import { JoyStick } from './JoyStick';
-import preventDoubleTapZoom, { PreventZoom } from './PreventZoom';
-import { openFullscreen, closeFullscreen } from './Fullscreen';
-
-
-class Controller {
-  constructor() {
-    this.connect();
-  }
-
-  connect() {
-    this.ws = new WebSocket("ws://192.168.2.101:8765");
-    this.ws.binaryType = 'arraybuffer';
-    this.ws.onopen = () => {
-      this.send(new Uint8Array([0xFF]));
-    }
-  }
-
-  send(p) {
-    if (this.ws.readyState === this.ws.OPEN) {
-      this.ws.send(p);
-    }  
-    if (this.ws.readyState == this.ws.CLOSED) {
-      console.log("Reconnecting to websocket");
-      this.connect();
-    }
-  }
-
-  on_axis(v, group) {
-    let p = new Uint8Array(new Float32Array([v]).buffer);
-    const group_ids = {
-      'x': 0x83,
-      'y': 0x84,
-      'z': 0x85,
-      'rx': 0x86,
-      'ry': 0x87,
-      'rz': 0x88,
-      'sl0': 0x89,
-      'sl1': 0x90,
-    };
-    let id = group_ids[group];
-    this.send(new Uint8Array([id, ...p]));
-  }
-
-  on_button_press(id) { 
-    this.send(new Uint8Array([0x81, id & 0xff])) 
-  }
-
-  on_button_release(id) {
-    this.send(new Uint8Array([0x82, id & 0xff])) 
-  }
-}
+import { toggleFullscreen, openFullscreen } from './Fullscreen';
+import { Controller } from "./Controller";
 
 function App() {
   let ctl = new Controller();
@@ -81,10 +31,11 @@ function App() {
 
   return (
     <AppProvider value={ctl}>
-      <div className="container" onTouchStart={preventDoubleTapZoom}>
+      {/* <div className="container noselect" onTouchStart={preventDoubleTapZoom}> */}
+      <div className="container noselect">
         <div className="left-panel">
           <JoyStick xg='x' yg='y' pwidth={250} pheight={250}></JoyStick>
-          <Slider axis='sl0' text='spoilers' snap={false} step={1}></Slider>
+          <Slider axis='sl0' text='spoilers' snap={false} step={1} default_value={0}></Slider>
           <div>
             <Button id={22} text="PT Up"></Button>
             <Button id={23} text="PT Down"></Button>
@@ -100,7 +51,7 @@ function App() {
             <Button id={17} text="Map"></Button>
             <Button id={18} text="Drone"></Button>
             <div>
-              <label>Instruments</label>
+              <label><small>Instruments</small></label>
               <Button id={19} text="Prev"></Button>
               <Button id={20} text="Next"></Button>
             </div>
@@ -108,7 +59,7 @@ function App() {
         </div>
         <div className="right-panel">
           <Slider axis='z' text='rudder' step={1}></Slider>
-          <Slider axis='rz' text='flaps' snap={false} step={10}></Slider>
+          <Slider axis='rz' text='flaps' snap={false} step={1}></Slider>
           <div style={{textAlign: 'center'}}>
             <Button id={12} text="Flaps Up"></Button>
             <Button id={2} text="Flaps Down"></Button>
@@ -135,8 +86,7 @@ function App() {
           </div>
 
           <div style={{marginTop: "10px", float: 'right'}}>
-            <button onClick={openFullscreen}>O</button>
-            <button onClick={closeFullscreen}>X</button>
+            <button onClick={toggleFullscreen}><b>⛶</b></button>
           </div>
         </div>
       </div>
@@ -144,9 +94,9 @@ function App() {
   );
 }
 
-function Slider({axis, text, snap=true, step=10}) {
+function Slider({axis, text, default_value=50, snap=true, step=10}) {
   const ctl = useContext(AppContext);
-  const [value, set_value] = useState(50);
+  const [value, set_value] = useState(default_value);
   const [_snap, set_snap] = useState(snap);
 
   function on_change(ev) {
@@ -156,8 +106,8 @@ function Slider({axis, text, snap=true, step=10}) {
   }
 
   function reset() {
-    ctl.on_axis(0.5, axis);
-    set_value(50);
+    ctl.on_axis(default_value/100, axis);
+    set_value(default_value);
   }
   
   function on_release() {
@@ -176,13 +126,13 @@ function Slider({axis, text, snap=true, step=10}) {
   }
 
   return (
-    <div>
-      <input type='range' value={value} max={100} min={0} step={step} 
+    <div className="w-100">
+      <input className="w-75" type='range' value={value} max={100} min={0} step={step} 
              onChange={on_change}
              onMouseUp={on_release}
              onTouchEnd={on_release}>
       </input>
-      {text && <button onClick={toggle_snap}>{text + (!_snap ? "*" : "")}</button>}
+      <button className={_snap ? "snapped-slider" : ""} onClick={toggle_snap}>{text}</button>
     </div>);
 }
 
@@ -190,7 +140,7 @@ function Button({id, text}) {
   const ctl = useContext(AppContext);
 
   return (
-    <button 
+    <button
       onMouseDown={() => ctl.on_button_press(id)} onMouseUp={() => ctl.on_button_release(id)}
       onTouchStart={() => ctl.on_button_press(id)} onTouchEnd={() => ctl.on_button_release(id)}
       style={{margin: '5px'}}

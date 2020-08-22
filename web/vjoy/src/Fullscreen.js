@@ -25,3 +25,11 @@ export function closeFullscreen() {
     document.msExitFullscreen();
   }
 }
+
+export function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    openFullscreen();
+  } else if (document.exitFullscreen) {
+    closeFullscreen();
+  }
+}

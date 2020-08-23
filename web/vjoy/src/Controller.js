@@ -1,10 +1,13 @@
 export class Controller {
   constructor() {
-    this.connect();
+    this.ws = null;
   }
 
-  connect() {
-    this.ws = new WebSocket("ws://192.168.2.101:8765");
+  connect(url) {
+    if (!url) {
+      url = `ws://${document.location.hostname}:8765`;
+    }
+    this.ws = new WebSocket(url);
     this.ws.binaryType = 'arraybuffer';
     this.ws.onopen = () => {
       this.send(new Uint8Array([0xFF]));
@@ -12,6 +15,9 @@ export class Controller {
   }
 
   send(p) {
+    if (!this.ws) {
+      return;
+    }
     if (this.ws.readyState === this.ws.OPEN) {
       this.ws.send(p);
     }  

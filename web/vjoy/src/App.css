@@ -1,19 +1,22 @@
 .container {
-  height: 100%;
-  width: 100%;
   display: flex;
   margin: 10px;
   vertical-align: bottom;
 }
 
 .left-panel {
-  width: 35%;
+  /* width: 35%; */
+  min-width: 250px;
 }
 
 .mid-panel {
-  width: 30%;
+  /* width: 30%; */
+  margin-left: 10px;
+  min-width: 250px;
 }
 
 .right-panel {
-  width: 32%;
+  min-width: 200px;
+  margin-left: 10px;
+  /* width: 32%; */
 }

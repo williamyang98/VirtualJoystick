@@ -2,32 +2,13 @@ import React, { useContext, useState, useEffect } from 'react';
 import AppContext, { AppProvider } from './AppContext';
 import './App.css';
 import { JoyStick } from './JoyStick';
-import { toggleFullscreen, openFullscreen } from './Fullscreen';
+import { toggleFullscreen } from './Fullscreen';
 import { Controller } from "./Controller";
+import { Gyroscope } from './Gyroscope';
 
 function App() {
   let ctl = new Controller();
-
-  function tilt(x, y) {
-    let p = new Uint8Array(new Float32Array([x, y]).buffer);
-    ctl.send(new Uint8Array([0xAF, ...p]));
-  }
-
-  function listen_gyroscope() {
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", (ev) => {
-          tilt(ev.beta, ev.gamma);
-      }, true);
-    } else if (window.DeviceMotionEvent) {
-      window.addEventListener('devicemotion', (ev) => {
-          tilt(ev.accelerationIncludingGravity.x, ev.accelerationIncludingGravity.y);
-      }, true);
-    } else {
-      setTimeout(() => tilt(-1, -1), 1000);
-    }
-  }
-
-  listen_gyroscope();
+  ctl.connect();
 
   return (
     <AppProvider value={ctl}>
@@ -40,9 +21,10 @@ function App() {
             <Button id={22} text="PT Up"></Button>
             <Button id={23} text="PT Down"></Button>
           </div>
+          <Gyroscope></Gyroscope>
         </div>
         <div className="mid-panel">
-          <JoyStick xg='rx' yg='ry' pwidth={200} pheight={200} snap={true}></JoyStick>
+          <JoyStick xg='rx' yg='ry' pwidth={250} pheight={250} snap={true}></JoyStick>
           <div>
             <Button id={15} text="Reset Camera"></Button>
             <Button id={16} text="Ext Camera"></Button>
@@ -132,17 +114,31 @@ function Slider({axis, text, default_value=50, snap=true, step=10}) {
              onMouseUp={on_release}
              onTouchEnd={on_release}>
       </input>
-      <button className={_snap ? "snapped-slider" : ""} onClick={toggle_snap}>{text}</button>
+      <button className={_snap ? "snapped-slider" : ""} 
+        onClick={toggle_snap}
+      >{text}</button>
     </div>);
 }
 
 function Button({id, text}) {
+  let [pressed, set_pressed] = useState(false);
+
   const ctl = useContext(AppContext);
 
+  function press() {
+    set_pressed(true);
+    ctl.on_button_press(id);
+  }
+
+  function release() {
+    set_pressed(false);
+    ctl.on_button_release(id);
+  }
+
   return (
-    <button
-      onMouseDown={() => ctl.on_button_press(id)} onMouseUp={() => ctl.on_button_release(id)}
-      onTouchStart={() => ctl.on_button_press(id)} onTouchEnd={() => ctl.on_button_release(id)}
+    <button className={pressed ? "pressed-btn" : ""}
+      onMouseDown={press} onMouseUp={release}
+      onTouchStart={press} onTouchEnd={release}
       style={{margin: '5px'}}
     >{text}
     </button>

@@ -41,3 +41,7 @@ code {
 .snapped-slider {
   background-color: aqua;
 }
+
+.pressed-btn {
+  background-color: greenyellow;
+}

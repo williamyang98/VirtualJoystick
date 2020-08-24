@@ -10,9 +10,10 @@ python3 main.py
 # E.g. localhost:3000, 192.168.x.x:3000
 ```
 
-### Basic UI
+### Example UI
+UI for Microsoft Flight Simulator 2020.
 ![alt text](docs/phone_ui_v3.jpg "UI Phone App")
-Basic proof of concept for Microsoft Flight Simulator 2020.
+
 
 ### Changing UI
 UI is written using ReactJS. Run below commands to start development server.

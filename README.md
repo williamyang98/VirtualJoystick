@@ -1,7 +1,17 @@
 ## Explanation
-Uses [vJoy](http://vjoystick.sourceforge.net/site/index.php/download-a-install/download) to emulate a virtual joystick. Python is used to the load the vJoy dll, and communicates with a react web app to recieve joystick commands from a website. This can run on any phone or desktop.
+Uses [vJoy](http://vjoystick.sourceforge.net/site/index.php/download-a-install/download) to emulate a virtual joystick. 
+Python is used to the load vJoy.dll, and communicates with a react web app to recieve joystick commands from a website. This can be run on any phone or desktop.
 
-### Running build
+### Installing vJoy
+[Install vJoy](http://vjoystick.sourceforge.net/site/index.php/download-a-install/download).
+Script needs a vJoy device, so run "vJoyCong.exe" in the vJoy install location or from start menu (C:/Program Files/vJoy/x64/vJoyCong.exe).
+Currently script uses the following settings: 
+- vJoy device: 1
+- All axes enabled
+- 32 buttons
+- Effects disabled (vibration etc)
+
+### Running virtual joystick
 ```bash
 cd controller
 python3 main.py

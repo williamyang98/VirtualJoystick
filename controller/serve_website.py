@@ -22,4 +22,4 @@ def on_connect():
     print("Connection")
 
 if __name__ == '__main__':
-    socketio.run(app, host="192.168.2.10", port=3000, log_output=True)
+    socketio.run(app, host="0.0.0.0", port=3000, log_output=True)

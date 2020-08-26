@@ -1,27 +1,36 @@
+import io from "socket.io-client";
+
 export class Controller {
   constructor() {
-    this.ws = null;
+    this.socket = null;
+    this.initialized = false;
+
+    this.connect();
+
+    this.socket.on("connect", () => {
+      if (!this.initialized) {
+        this.initialized = true;
+        let p = new Uint8Array([0xff]);
+        this.socket.emit("data", p.buffer);
+      }
+    });
   }
 
   connect(url) {
     if (!url) {
-      url = `ws://${document.location.hostname}:8765`;
+      url = `ws://${document.location.host}`;
     }
-    this.ws = new WebSocket(url);
-    this.ws.binaryType = 'arraybuffer';
-    this.ws.onopen = () => {
-      this.send(new Uint8Array([0xFF]));
-    }
+    this.socket = new io(url);
   }
 
   send(p) {
-    if (!this.ws) {
+    if (!this.socket) {
       return;
     }
-    if (this.ws.readyState === this.ws.OPEN) {
-      this.ws.send(p);
+    if (this.socket.connected) {
+      this.socket.emit("data", p.buffer);
     }  
-    if (this.ws.readyState == this.ws.CLOSED) {
+    if (!this.socket.connected) {
       console.log("Reconnecting to websocket");
       this.connect();
     }

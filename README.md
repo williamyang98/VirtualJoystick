@@ -4,7 +4,7 @@ Python is used to the load vJoy.dll, and communicates with a react web app to re
 
 ### Installing vJoy
 [Install vJoy](http://vjoystick.sourceforge.net/site/index.php/download-a-install/download).
-Script needs a vJoy device, so run "vJoyCong.exe" in the vJoy install location or from start menu (C:/Program Files/vJoy/x64/vJoyCong.exe).
+Script needs a vJoy device, so run "vJoyConf.exe" in the vJoy install location or from start menu (C:/Program Files/vJoy/x64/vJoyConf.exe).
 Currently script uses the following settings: 
 - vJoy device: 1
 - All axes enabled

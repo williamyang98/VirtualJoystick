@@ -1,10 +1,13 @@
 from vjoy import *
-import numpy as np
 import math
 
 def norm_clip( func):
     def wrapped(self, x):
-        return func(self, np.clip(x, 0, 1))
+        if x < 0:
+            x = 0
+        elif x > 1:
+            x = 1
+        return func(self, x)
     return wrapped
 
 class Controller:

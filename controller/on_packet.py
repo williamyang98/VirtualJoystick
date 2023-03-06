@@ -10,7 +10,7 @@ axis_ids = {
     'rx': 0x86,
     'ry': 0x87,
     'rz': 0x88,
-};
+}
 
 axis_lookup = {
     0x83: lambda ctl, v: ctl.set_x(v),
@@ -33,11 +33,17 @@ def on_packet(packet):
         return
 
     if h == 0x81:
+        if len(m) != 2:
+            print(f'Invalid byte count ({len(m)}) for button press (expected 1+1)') 
+            return
         b = m[1]
         ctl.on_button_press(b)
         return
 
     if h == 0x82:
+        if len(m) != 2:
+            print(f'Invalid byte count ({len(m)}) for button release (expected 1+1)') 
+            return
         b = m[1]
         ctl.on_button_release(b)
         return
@@ -45,11 +51,15 @@ def on_packet(packet):
     axis_cb = axis_lookup.get(h, None)
     if axis_cb is not None:
         if len(m) != 5:
-            print(f'Invalid byte count ({len(m)}) for axis {h}') 
-        val = struct.unpack('f', bytes(m[1:5]))
+            print(f'Invalid byte count ({len(m)}) for axis {h} (expected 1+4)') 
+            return
+        val, = struct.unpack('f', bytes(m[1:5]))
         axis_cb(ctl, val)
         return
 
     if h == 0xAF:
+        if len(m) != 9:
+            print(f'Invalid byte count ({len(m)}) for 2-axis float (expected 1+4+4)') 
+            return
         x, y = struct.unpack('ff', bytes(m[1:9]))
         print(x, y)

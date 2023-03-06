@@ -2,7 +2,7 @@ from vjoy import *
 
 import time
 from threading import Thread
-import numpy as np
+import random
 
 RID = 1
 
@@ -50,7 +50,7 @@ def main():
     def button_test():
         while running:
             n = VJoy.GetVJDButtonNumber(1)
-            states = np.random.rand(n) > 0.5
+            states = [random.random() > 0.5 for _ in range(n)]
 
             for i, state in enumerate(states):
                 bid = i+1

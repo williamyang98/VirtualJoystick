@@ -1,9 +1,9 @@
 ## Explanation
 Uses [vJoy](https://github.com/jshafer817/vJoy) to emulate a virtual joystick. 
-Python is used to the load vJoy.dll, and communicates with a react web app to recieve joystick commands from a website. This can be run on any phone or desktop.
+Python is used to load vJoyInterface.dll, and communicates with a react web app to recieve joystick commands from a website. This can be run on any phone or desktop.
 
 ### 1. Installing vJoy
-[Install vJoy](https://github.com/jshafer817/vJoy/releases) by install <code>vJoySetup.exe</code>.
+[Install vJoy](https://github.com/njz3/vJoy/releases/tag/v2.2.1.1) by installing <code>vJoySetup-2.2.1-signed.exe</code>.
 
 Script needs a vJoy device, so run "vJoyConf.exe" in the vJoy install location or from start menu (C:/Program Files/vJoy/x64/vJoyConf.exe).
 
